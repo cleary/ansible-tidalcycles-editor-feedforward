@@ -18,10 +18,16 @@
     args:
       chdir: /tmp/feedforward/
 
-  - debug:
-      msg: "feedforward can be run from ~/.cabal/bin/feedforward"
-
   become: yes
   become_method: su
   become_user: "{{ansible_env.SUDO_USER}}"
   become_flags: '-s /bin/bash'
+
+- name: set up symlink in /usr/local/bin/feedforward
+  file:
+    src: "/home/{{ansible_env.SUDO_USER}}/.cabal/bin/feedforward"
+    dest: /usr/local/bin/feedforward
+    owner: root
+    group: root
+    state: link
+
