@@ -1,0 +1,7 @@
+---
+- name: install feedforward build dependencies
+  apt:
+    state: latest
+    update_cache: yes
+    install_recommends: no
+    name: 'libncursesw5-dev'
