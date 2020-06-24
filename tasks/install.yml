@@ -1,22 +1,28 @@
 ---
 - block:
-  - name: clone https://github.com/yaxu/feedforward
+  - name: create staging/build directory parent ~/.local (if required)
+    file:
+      path: "/home/{{ansible_env.SUDO_USER}}/.local"
+      state: directory
+      mode: '0775'
+
+  - name: clone https://github.com/yaxu/feedforward into ~/.local/
     git:
       repo: 'https://github.com/yaxu/feedforward.git'
-      dest: /tmp/feedforward
+      dest: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
 
   - name: update cabal
     shell: cabal update  
   
-  - name: compile and install c2hs dep
+  - name: compile and install c2hs dependency
     shell: cabal install c2hs
     register: c2in
     changed_when: "not c2in.stdout is search('All the requested packages are already installed:')"
 
-  - name: install feedforward editor
+  - name: compile and install feedforward editor
     shell: cabal install 
     args:
-      chdir: /tmp/feedforward/
+      chdir: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
 
   become: yes
   become_method: su
