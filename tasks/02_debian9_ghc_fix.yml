@@ -1,8 +1,8 @@
 ---
 - name: get haskell/ghc repo key
   apt_key:
+    keyserver: keyserver.ubuntu.com
     id: BA3CBA3FFE22B574
-    state: present
 
 - name: add haskell/ghc repository
   apt_repository:
