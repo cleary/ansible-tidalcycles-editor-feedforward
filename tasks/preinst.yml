@@ -7,5 +7,5 @@
     name: 'libncursesw5-dev'
 
 - name: workaround old ghc version issue on debian 9/stretch
-  include_tasks: 02_debian9_ghc_fix.yml
+  include: 02_debian9_ghc_fix.yml
   when: ansible_distribution == "Debian" and ansible_distribution_major_version|int < 10
