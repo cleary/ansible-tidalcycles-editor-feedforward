@@ -10,19 +10,29 @@
     git:
       repo: 'https://github.com/yaxu/feedforward.git'
       dest: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
+    register: gitup
 
-  - name: update cabal
-    shell: cabal update  
-  
-  - name: compile and install c2hs dependency
-    shell: cabal install c2hs
-    register: c2in
-    changed_when: "not c2in.stdout is search('All the requested packages are already installed:')"
+  - name: check if we have successfully built previously
+    stat:
+      path: /usr/local/bin/feedforward
+    register: ffsym
 
-  - name: compile and install feedforward editor
-    shell: cabal install 
-    args:
-      chdir: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
+  - block:
+    - name: update cabal
+      shell: cabal update  
+      changed_when: false
+    
+    - name: compile and install c2hs dependency
+      shell: cabal install c2hs
+      register: c2in
+      changed_when: "not c2in.stdout is search('All the requested packages are already installed:')"
+
+    - name: compile and install feedforward editor
+      shell: cabal install 
+      args:
+        chdir: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
+
+    when: gitup.changed or ffsym.stat.islnk is not defined
 
   become: yes
   become_method: su
