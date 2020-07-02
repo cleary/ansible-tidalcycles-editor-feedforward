@@ -39,7 +39,7 @@
 
 - name: update PATH
   lineinfile:
-    path: "/home/{{ansible_env.SUDO_USER}}/.bashrc"
+    dest: "/home/{{ansible_env.SUDO_USER}}/.bashrc"
     state: present
     line: PATH=/opt/ghc/bin/:$PATH
   become: yes
