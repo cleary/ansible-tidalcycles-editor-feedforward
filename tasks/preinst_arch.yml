@@ -1,0 +1,27 @@
+---
+- name: install cabal (Archlinux)
+  pacman:
+    state: latest
+    update_cache: yes
+    name: cabal-install
+
+- block:
+  - name: make sure our ~/.cabal/ folder exists (Archlinux)
+    file:
+      path: "/home/{{ansible_env.SUDO_USER}}/.cabal"
+      state: directory
+      mode: '0775'
+
+  - name: configure ~/.cabal/config (backup any existing) (Archlinux)
+    template:
+      src: templates/cabal_config.arch.template
+      dest: "/home/{{ansible_env.SUDO_USER}}/.cabal/config"
+      mode: 0640
+      backup: yes
+    tags:
+    - config
+
+  become: yes
+  become_method: su
+  become_user: "{{ansible_env.SUDO_USER}}"
+  become_flags: '-s /bin/bash'
