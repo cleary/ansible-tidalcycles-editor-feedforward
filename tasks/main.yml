@@ -3,3 +3,5 @@
 - include: preinst.yml      
 
 - include: install.yml      
+
+- include: postinst.yml      
