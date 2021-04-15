@@ -1,0 +1,15 @@
+#!/bin/bash
+
+FFBIN=${HOME}/.cabal/bin/feedforward
+FFARGS="{% if custom_params_hs is defined %}-s {{ custom_params_hs }}{% endif %}"
+FFLOG="/tmp/feedforward.log"
+
+echo -e "Starting feedforward...\n  Logging stderr to ${FFLOG}"
+sleep 2
+
+if [ -f ${FFBIN} ]; then
+    exec ${FFBIN} ${FFARGS} ${@} 2> ${FFLOG}
+else
+    >&2 echo "feedforward executable missing: ${FFBIN}"
+    exit 1
+fi
