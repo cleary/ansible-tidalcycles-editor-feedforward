@@ -1,32 +1,5 @@
 ---
 
-- block:
-  - name: get default BootTidal.hs locations
-    shell: ghc-pkg field tidal data-dir | head -n 1 | awk '{print $2}'
-    register: tidloc
-    changed_when: False
-
-  - name: create required config scripts directory
-    file:
-      path: "/home/{{ansible_env.SUDO_USER}}/.local/share/ansible-tidalcycles/scripts/"
-      state: directory
-      recurse: yes
-
-  - name: copy mutable-instruments params file to scripts dir
-    get_url:
-      url: https://raw.githubusercontent.com/cleary/ansible-tidalcycles/master/files/mutable-instruments-ugens_parameters.hs
-      dest: "/home/{{ansible_env.SUDO_USER}}/.local/share/ansible-tidalcycles/scripts/mutable-instruments-ugens_parameters.hs"
-
-  - name: configure mutable-instruments params file to load in feedforward
-    set_fact:
-      custom_params_hs: "/home/{{ansible_env.SUDO_USER}}/.local/share/ansible-tidalcycles/scripts/mutable-instruments-ugens_parameters.hs"
-
-  become: yes
-  become_method: su
-  become_user: "{{ansible_env.SUDO_USER}}"
-  become_flags: '-s /bin/bash'
-  when: sc_ugens is defined and "mutable-instruments" in sc_ugens
-
 - name: set up launcher in /usr/local/bin/feedforward
   template:
     src: templates/feedforward.template
@@ -35,3 +8,9 @@
     owner: root
     group: root
 
+- include_role:
+    name: "roles/ugens-{{ item }}"
+  vars:
+    editor: "{{ feedforward.editor }}"
+  with_items: "{{ sc_ugens }}"
+  when: sc_ugens is defined

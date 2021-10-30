@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FFBIN=${HOME}/.cabal/bin/feedforward
-FFARGS="{% if custom_params_hs is defined %}-s {{ custom_params_hs }}{% endif %}"
+FFARGS=""
 FFLOG="/tmp/feedforward.log"
 
 echo -e "Starting feedforward...\n  Logging stderr to ${FFLOG}"
