@@ -22,8 +22,16 @@
       shell: cabal update  
       changed_when: false
     
+    - set_fact:
+        c2hs_cmd: cabal install c2hs --lib
+      when: ansible_distribution_release == "bullseye"
+
+    - set_fact:
+        c2hs_cmd: cabal install c2hs
+      when: ansible_distribution_release != "bullseye"
+
     - name: compile and install c2hs dependency
-      shell: cabal install c2hs
+      shell: "{{ c2hs_cmd }}"
       register: c2in
       changed_when: "not c2in.stdout is search('All the requested packages are already installed:')"
 
