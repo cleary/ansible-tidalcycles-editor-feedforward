@@ -14,7 +14,7 @@
 
   - name: check if we have successfully built previously
     stat:
-      path: /usr/local/bin/feedforward
+      path:  "/home/{{ansible_env.SUDO_USER}}/.cabal/bin/feedforward"
     register: ffbin
 
   - block:
