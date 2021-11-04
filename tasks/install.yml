@@ -39,7 +39,7 @@
       shell: cabal install 
       args:
         chdir: "/home/{{ansible_env.SUDO_USER}}/.local/feedforward"
-    when: gitup.changed
+    when: gitup.changed or not ffbin.stat.exists
 
   become: yes
   become_method: su
